@@ -3,8 +3,9 @@ mod trie;
 pub use trie::PathTrie;
 
 /// Specify how to display paths
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub enum PathFormat {
+    #[default]
     Normal,
     Absolute,
 }
@@ -16,12 +17,6 @@ impl From<bool> for PathFormat {
         } else {
             PathFormat::Normal
         }
-    }
-}
-
-impl Default for PathFormat {
-    fn default() -> Self {
-        PathFormat::Normal
     }
 }
 

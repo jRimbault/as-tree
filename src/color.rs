@@ -1,10 +1,12 @@
 use lscolors::LsColors;
 use std::fmt;
+use std::io::{self, IsTerminal};
 use std::str::FromStr;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Default)]
 pub enum Color {
     Always,
+    #[default]
     Auto,
     Never,
 }
@@ -20,7 +22,7 @@ impl From<Color> for LsColors {
         match value {
             Color::Always => LsColors::from_env().unwrap_or_default(),
             Color::Auto => {
-                if atty::is(atty::Stream::Stdout) {
+                if io::stdout().is_terminal() {
                     LsColors::from_env().unwrap_or_default()
                 } else {
                     LsColors::empty()
@@ -44,12 +46,6 @@ impl FromStr for Color {
                 value
             )),
         }
-    }
-}
-
-impl Default for Color {
-    fn default() -> Self {
-        Color::Auto
     }
 }
 

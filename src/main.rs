@@ -4,7 +4,7 @@ use argh::FromArgs;
 use as_tree::{PathFormat, PathTrie};
 use color::Color;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, IsTerminal, Write};
 use std::path::{Path, PathBuf};
 
 /// Print a list of paths as a tree of paths.
@@ -27,20 +27,19 @@ struct Options {
 fn main() -> io::Result<()> {
     let options: Options = argh::from_env();
     let trie = build_trie(options.filename.as_deref())?;
-    println!(
-        "{}",
-        trie.custom_display(
-            options.color.unwrap_or_default().into(),
-            options.path_format.unwrap_or_default()
-        )
+    let tree = trie.custom_display(
+        options.color.unwrap_or_default().into(),
+        options.path_format.unwrap_or_default(),
     );
+    let mut stdout = io::stdout().lock();
+    write!(stdout, "{tree}")?;
     Ok(())
 }
 
 fn build_trie(filename: Option<&Path>) -> io::Result<PathTrie> {
     let trie = match filename {
         None => {
-            if atty::is(atty::Stream::Stdin) {
+            if io::stdin().is_terminal() {
                 eprintln!("Warning: reading from stdin, which is a tty.");
             }
             read_lines_from_buffer(io::stdin().lock())
@@ -54,5 +53,5 @@ fn build_trie(filename: Option<&Path>) -> io::Result<PathTrie> {
 }
 
 fn read_lines_from_buffer<T: BufRead>(input: T) -> PathTrie {
-    input.lines().filter_map(Result::ok).collect()
+    input.lines().map_while(Result::ok).collect()
 }
