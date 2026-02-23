@@ -1,0 +1,3 @@
+tests/dir1/bar.txt
+tests/dir1/foo.txt
+tests/dir2/qux.txt

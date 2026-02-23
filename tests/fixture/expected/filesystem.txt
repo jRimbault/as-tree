@@ -1,0 +1,6 @@
+[1;34m[0m[1;34mtests[0m
+├── [1;34mdir1[0m
+│   ├── bar.txt
+│   └── foo.txt
+└── [1;34mdir2[0m
+    └── qux.txt

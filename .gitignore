@@ -1,3 +1,4 @@
 /target
 /bazel-*
 .bazelrc.local
+lcov.info

@@ -61,11 +61,11 @@ impl fmt::Display for Color {
 }
 
 #[cfg(test)]
-mod tests {
+mod test {
     use super::*;
 
     #[test]
-    fn test_serde() {
+    fn serde() {
         assert_eq!(Color::AUTO, format!("{}", Color::default()));
         assert_eq!(Color::ALWAYS, format!("{}", Color::Always));
         assert_eq!(Color::AUTO, format!("{}", Color::Auto));
